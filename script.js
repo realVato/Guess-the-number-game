@@ -15,38 +15,58 @@ const previousGuess = document.querySelector('.previousGuess');
 const previousResult = document.querySelector('.previousResult');
 const lowOrHigh = document.querySelector('.lowOrHigh');
 
+const resetButton = document.querySelector('.btn-reset');
+
 let guessCount = 1;
 
+
+//Functions for submitButton (2)
 function checkGuess() {
-    let userGuess = userInput.value;
+    let userGuess = Number(userInput.value);
     if (guessCount === 1) {
         previousGuess.textContent = 'previous guesses: ';
     }
-    previousGuess.textContent += `${userGuess} `
+    previousGuess.textContent += `${userGuess} `;
+    lowOrHigh.style.display = 'block';
+
 
     if (userGuess === random) {
+
         previousResult.textContent = 'Congratulations!';
         previousResult.style.backgroundColor = 'green';
         lowOrHigh.style.display = 'none';
+
+        submitButton.disabled = true;
+        resetButton.style.display = 'block';
+
     } else if (userGuess < random) {
+
         previousResult.textContent = 'wrong!';
         previousResult.style.backgroundColor = 'red';
         lowOrHigh.textContent = 'too low!';
         
         guessCount++;
+
     } else if (userGuess > random) {
+
         previousResult.textContent = 'wrong!';
         previousResult.style.backgroundColor = 'red';
         lowOrHigh.textContent = 'too high!';
-        console.log('yes')
 
         guessCount++;
-    } else if (guessCount === 10) {
+
+    }
+
+    // After tenth try game ends
+    if (guessCount === 11) {
+
         previousResult.textContent = 'out of tries';
         previousResult.style.backgroundColor = 'red';
         lowOrHigh.style.display = 'none';
 
-        guessCount = 1;
+        submitButton.disabled = true;
+        resetButton.style.display = 'block';
+
     }
 }
 
@@ -56,3 +76,21 @@ function getData(e) {
 
 submitButton.addEventListener('click', checkGuess);
 submitButton.addEventListener('click', getData);
+
+//Functions for resetButton 
+function resetGame() {
+    random = Math.floor(Math.random() * 10) + 1;
+    userGuess = userInput.value = '';
+    previousGuess.textContent = '';
+    previousResult.textContent = '';
+    previousResult.style.backgroundColor = 'none';
+    lowOrHigh.style.display = 'none';
+
+    submitButton.disabled = false;
+    
+    guessCount = 1;
+    
+    resetButton.style.display = 'none';
+}
+
+resetButton.addEventListener('click', resetGame);
